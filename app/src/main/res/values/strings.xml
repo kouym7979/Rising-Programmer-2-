@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">FrontEnd_Practice</string>
+    <string name="bank_name">하나멤버스주거래통장</string>
+    <string name="my_account">[279-910535-68107]</string>
+    <string name="my_money">99999999 원</string>
+    <string name="table1">자산관리</string>
+    <string name="table2">금융상품</string>
+    <string name="table3">생활뱅킹</string>
+    <string name="table4">제휴/혜택</string>
 </resources>
