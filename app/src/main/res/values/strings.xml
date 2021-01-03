@@ -7,4 +7,8 @@
     <string name="table2">금융상품</string>
     <string name="table3">생활뱅킹</string>
     <string name="table4">제휴/혜택</string>
+    <string name="search_ant">조회</string>
+    <string name="send_money">이체</string>
+    <string name="open_banking">오픈뱅킹</string>
+    <string name="toggle_btn">계좌</string>
 </resources>

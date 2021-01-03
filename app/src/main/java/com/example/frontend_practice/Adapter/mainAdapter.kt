@@ -1,5 +1,4 @@
 package com.example.frontend_practice.Adapter
 
-class mainAdapter  {
+import android.content.Context
 
-}
