@@ -14,7 +14,7 @@
         android:columnCount="2"
         android:orientation="horizontal">
 
-        <ImageButton
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_columnWeight="0.5"
@@ -23,7 +23,7 @@
             android:layout_margin="10dp"
             android:background="@drawable/pic1_up" />
 
-        <ImageButton
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_columnWeight="0.5"
