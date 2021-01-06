@@ -130,14 +130,13 @@
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
-            <androidx.appcompat.widget.SwitchCompat
+            <Switch
                 android:id="@+id/account"
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:layout_height="31dp"
                 android:layout_marginRight="20sp"
-                android:theme="@style/SCBSwitch"
-                android:textOff="@string/toggle_btn"
-                android:textOn="@string/toggle_btn"
+                android:track="@drawable/switch_custom"
+                android:thumb="@drawable/swtich_thumb"
                 app:switchTextAppearance="string/toggle_btn"
                 android:checked="true"
                 app:showText="true" />
@@ -152,6 +151,7 @@
             android:background="@drawable/account_shape"
             android:orientation="vertical">
 
+            <!--이 부분을 constraint로 변경-->
             <LinearLayout
                 android:id="@+id/item_main_layout"
                 android:layout_width="match_parent"
@@ -173,7 +173,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="20dp"
-                    android:text="@string/my_account"
+                    tools:text="@string/my_account"
                     android:textStyle="bold" />
 
                 <ImageButton
@@ -194,7 +194,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
-                    android:text="@string/my_money"
+                    tools:text="@string/my_money"
                     android:textSize="30sp"
                     android:textStyle="bold" />
 
@@ -273,11 +273,27 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/frame_recycler1"
+                <fragment
+                    android:id="@+id/fragment1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+                    android:name="com.example.frontend_practice.Fragment_manage"
+                    tools:layout="@layout/manage_fragment"
+                    />
+                <fragment
+                    android:id="@+id/fragment2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:name="com.example.frontend_practice.Fragment_product"
+                    tools:layout="@layout/manage_fragment"
+                    />
+                <fragment
+                    android:id="@+id/fragment3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:name="com.example.frontend_practice.Fragment_bacnk"
+                    tools:layout="@layout/manage_fragment"
+                    />
             </FrameLayout>
 
         </TableLayout>
