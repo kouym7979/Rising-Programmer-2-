@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_home"
+        app:cnb_iconColor="@color/navigation_color_mood"
+        android:icon="@drawable/home"
+        android:title="Home" />
+    <item
+        android:id="@+id/menu_list"
+        app:cnb_iconColor="@color/navigation_color_habit"
+        android:icon="@drawable/list"
+        android:title="ToDo" />
+    <item
+        android:id="@+id/menu_mypage"
+        app:cnb_iconColor="@color/navigation_color_add"
+        android:icon="@drawable/my_page"
+        android:title="MyPage" />
+    <!--
+    <item
+        android:id="@+id/chart"
+        app:cnb_iconColor="@color/navigation_color_chart"
+        android:icon="@drawable/ic_chart"
+        android:title="chart" />
+    <item
+        android:id="@+id/profile"
+        app:cnb_iconColor="@color/navigation_color_profile"
+        android:icon="@drawable/ic_account"
+        android:title="profile" />
+    -->
+
+</menu>
