@@ -8,10 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.example.lifecycle.databinding.FragmentHomeBinding
+import com.example.lifecycle.databinding.FragmentListBinding
 
 class ListFragment : Fragment(){//프래그먼트 상속
 
-
+    private var fragmentListBinding : FragmentListBinding?=null
     companion object{//정적으로 사용되는 부분이 오브젝트이므로
     const val TAG : String ="로그"
 
@@ -42,8 +44,11 @@ class ListFragment : Fragment(){//프래그먼트 상속
 
         Log.d(TAG,"ListFragment-onCreateView() called")
 
-        val view :View = inflater.inflate(R.layout.fragment_list,container,false)
+       // val view :View = inflater.inflate(R.layout.fragment_list,container,false)
 
-        return view
+        val binding :FragmentListBinding = FragmentListBinding.inflate(inflater,container,false)
+        fragmentListBinding=binding
+
+        return fragmentListBinding!!.root
     }
 }

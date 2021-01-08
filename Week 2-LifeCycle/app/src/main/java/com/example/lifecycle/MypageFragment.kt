@@ -8,10 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.example.lifecycle.databinding.FragmentListBinding
+import com.example.lifecycle.databinding.FragmentMyPageBinding
 
 class MypageFragment : Fragment(){//프래그먼트 상속
 
-
+    private var fragmentMyPageBinding : FragmentMyPageBinding?=null
     companion object{//정적으로 사용되는 부분이 오브젝트이므로
     const val TAG : String ="로그"
 
@@ -42,8 +44,10 @@ class MypageFragment : Fragment(){//프래그먼트 상속
 
         Log.d(TAG,"MypageFragment-onCreateView() called")
 
-        val view :View = inflater.inflate(R.layout.fragment_my_page,container,false)
 
-        return view
+        val binding : FragmentMyPageBinding = FragmentMyPageBinding.inflate(inflater,container,false)
+        fragmentMyPageBinding=binding
+
+        return fragmentMyPageBinding!!.root
     }
 }

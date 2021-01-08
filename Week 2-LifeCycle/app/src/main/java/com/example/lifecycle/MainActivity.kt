@@ -23,15 +23,18 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         const val TAG: String="로그"
     }
 
+    private var activityMainBinding: ActivityMainBinding?= null
 
     //화면이 메모리에 올라갔을 때
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //setContentView(R.layout.activity_main)
         //자동으로 완성된 액티비티 메인 바인딩 클래스 인스턴스를 가져온다.
-        binding = ActivityMainBinding.inflate(layoutInflater)
+
+        val binding : ActivityMainBinding= ActivityMainBinding.inflate(layoutInflater)
         // 뷰 바인딩과 연결
-        setContentView(binding.root)
+        activityMainBinding =binding
+        setContentView(activityMainBinding!!.root)
 
         Log.d(TAG, "MainActivity - onCreate() called")
         binding.bottomNav.setOnNavigationItemSelectedListener(this)

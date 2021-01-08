@@ -1,5 +1,6 @@
 package com.example.lifecycle
 
+import android.app.AlertDialog
 import android.content.Context
 import android.nfc.Tag
 import android.os.Bundle
@@ -7,14 +8,17 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.example.lifecycle.databinding.DialogBinding
 import com.example.lifecycle.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment(){//프래그먼트 상속
 
     //뷰가 사라질때 즉 메모리에서 날라갈때 같이 날리기 위해 따로 빼둬야함
-
     private var fragmentHomeBinding : FragmentHomeBinding?=null
+    private var select_day :String?=null
     companion object{//정적으로 사용되는 부분이 오브젝트이므로
         const val TAG : String ="로그"
 
@@ -27,6 +31,8 @@ class HomeFragment : Fragment(){//프래그먼트 상속
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(TAG,"HomeFragment -onCreate() call")
+
+
     }
 
     //프래그먼트를 품고 있는 액티비티에 붙었을 때
@@ -42,16 +48,28 @@ class HomeFragment : Fragment(){//프래그먼트 상속
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         Log.d(TAG,"HomeFragment-onCreateView() called")
-
-        //val view :View = inflater.inflate(R.layout.fragment_home,container,false)
-        //return view
-
         //뷰 바인딩 가져오기
         //홈 프레그먼트 -> 프레그먼트 홈 바인딩
         val binding : FragmentHomeBinding = FragmentHomeBinding.inflate(inflater,container,false)
         fragmentHomeBinding =binding
+
+        binding.homeCalendar.setOnDateChangeListener { view, year, month, dayOfMonth ->
+
+            select_day=String.format("%d /%d /%d",year,month+1,dayOfMonth)
+
+            var builder =AlertDialog.Builder(context)
+            builder.setView(layoutInflater.inflate(R.layout.dialog,null))
+
+            var dialogBinding : DialogBinding = DialogBinding.inflate(inflater,container,false)
+
+            builder.show()
+
+            dialogBinding.selectDate.text=select_day
+            dialogBinding.editContent
+
+        }
+
 
 
         return fragmentHomeBinding!!.root
@@ -63,4 +81,10 @@ class HomeFragment : Fragment(){//프래그먼트 상속
         super.onDestroyView()
     }
 
+
+}
+
+private fun Button.setOnClickListener(homeFragment: HomeFragment) {
+
+  
 }
