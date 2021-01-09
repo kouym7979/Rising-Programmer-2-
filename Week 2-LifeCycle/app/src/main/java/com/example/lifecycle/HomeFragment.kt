@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
 import com.example.lifecycle.databinding.DialogBinding
@@ -24,7 +25,7 @@ class HomeFragment : Fragment() {//프래그먼트 상속
     //뷰가 사라질때 즉 메모리에서 날라갈때 같이 날리기 위해 따로 빼둬야함
     private var fragmentHomeBinding: FragmentHomeBinding? = null
     private var select_day: String? = null
-
+    private var memo :String?=null
     companion object {
         //정적으로 사용되는 부분이 오브젝트이므로
         const val TAG: String = "로그"
@@ -59,42 +60,26 @@ class HomeFragment : Fragment() {//프래그먼트 상속
         //뷰 바인딩 가져오기
         //홈 프레그먼트 -> 프레그먼트 홈 바인딩
         //val view = inflater.inflate(R.layout.fragment_home, container, false)
-         val binding : FragmentHomeBinding = FragmentHomeBinding.inflate(inflater,container,false)
-        fragmentHomeBinding =binding
+         val home_binding : FragmentHomeBinding = FragmentHomeBinding.inflate(inflater,container,false)
+        fragmentHomeBinding =home_binding
 
-
-        binding.homeCalendar.setOnDateChangeListener { view, year, month, dayOfMonth ->
+        home_binding.homeCalendar.setOnDateChangeListener { view, year, month, dayOfMonth ->
 
             select_day = String.format("%d /%d /%d", year, month + 1, dayOfMonth)
             Log.d("확인", "선택한 날짜는" + select_day)
-
-            //val customDialog = CustomDialog(requireContext(),select_day.toString())
-
-
-            //customDialog.show()
-            /*var builder = AlertDialog.Builder(context)
-            builder.setView(layoutInflater.inflate(R.layout.dialog, null))
-            var dialogBinding: DialogBinding = DialogBinding.inflate(inflater, container, false)
-
-            var listener = DialogInterface.OnClickListener { dialog, which ->
-                var date_dialog = dialog as AlertDialog
-
-            }
-            dialogBinding.selectDate.text = select_day
-            dialogBinding.editContent
-
-            dialogBinding.yesButton.setOnClickListener(this)
-            dialogBinding.noButton.setOnClickListener(this)
-            builder.show()*/
-
-
         }
-        //binding.writeBtn.setOnClickListener(this,select_day.toString(),requireContext())
-        binding.writeBtn.setOnClickListener { binding->
-            val customDialog = CustomDialog(requireContext(),select_day!!)
 
+        //memo=home_binding.todoEdit.text.toString()
+        //binding.writeBtn.setOnClickListener(this,select_day.toString(),requireContext())
+        home_binding.writeBtn.setOnClickListener { home_binding->
+
+           // Log.d("확인", "선택한 날짜는" + select_day+" 메모:"+memo)
+
+            val customDialog = CustomDialog(requireContext(),select_day!!)
             customDialog.show()
         }
+
+
 
         return fragmentHomeBinding!!.root
     }
@@ -104,6 +89,7 @@ class HomeFragment : Fragment() {//프래그먼트 상속
         fragmentHomeBinding = null
         super.onDestroyView()
     }
+
 
 
 }

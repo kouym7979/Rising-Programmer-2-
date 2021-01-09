@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">LifeCycle</string>
+    <string name="app_name">todolist</string>
     <string name="selectdate">선택날짜</string>
     <string name="selected_day">날짜:</string>
 </resources>

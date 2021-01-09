@@ -14,16 +14,17 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        android:layout_margin="30sp"
+        />
 
-  <!--<TextView
+  <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="15sp"
         android:id="@+id/date"
-        app:layout_constraintBottom_toBottomOf="@+id/home_calendar"
+        app:layout_constraintTop_toBottomOf="@+id/home_calendar"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginTop="30sp"
+        android:layout_marginTop="10sp"
         android:layout_marginLeft="30sp"
         android:text="@string/selected_day"/>
     <TextView
@@ -31,7 +32,8 @@
         android:layout_height="wrap_content"
         android:textSize="15sp"
         android:id="@+id/s_date"
-        app:layout_constraintBottom_toBottomOf="@+id/home_calendar"
+        android:layout_marginTop="10sp"
+        app:layout_constraintTop_toBottomOf="@+id/home_calendar"
         app:layout_constraintLeft_toRightOf="@+id/date"
         android:layout_marginLeft="20sp"
         tools:text="선택된 날짜입니다"/>
@@ -43,7 +45,8 @@
         app:layout_constraintTop_toBottomOf="@+id/s_date"
         app:layout_constraintLeft_toLeftOf="parent"
         android:id="@+id/todo_edit"
-        />-->
+        android:layout_marginTop="20sp"
+        />
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
