@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.widget.Button
 import com.example.todolist.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -45,16 +46,19 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             var log_dialog=layoutInflater.inflate(R.layout.logout_dialog,null)
             builder.setView(log_dialog)
 
-            builder.setPositiveButton("네"){ dialog: DialogInterface?, which: Int ->
-            mAuth.signOut()
+            val yes_btn=log_dialog.findViewById<Button>(R.id.yesButton)
+            yes_btn.setOnClickListener {
+                mAuth.signOut()
                 var intent : Intent= Intent(this,LoginActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 startActivity(intent)
             }
-            builder.setNegativeButton("아니오"){dialog: DialogInterface?, which: Int ->
+            val no_btn=log_dialog.findViewById<Button>(R.id.noButton)
+            no_btn.setOnClickListener {
 
             }
+
             builder.show()
         }
 
@@ -88,9 +92,9 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         return true
     }
 
+
     override fun onClick(v: View?) {
 
     }
-
 
 }

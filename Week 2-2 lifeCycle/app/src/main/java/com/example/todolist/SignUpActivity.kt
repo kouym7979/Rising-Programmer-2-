@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_sign_up.*
@@ -57,5 +58,16 @@ class SignUpActivity : AppCompatActivity() {
 
     }
 
+    override fun onPause() {
+        super.onPause()
+        Toast.makeText(this,"현재 signup onpause입니다", Toast.LENGTH_SHORT)
+        Log.d("확인","현재 SignUp onPause입니다")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Toast.makeText(this,"현재 signup ondestroy입니다",Toast.LENGTH_SHORT)
+        Log.d("확인","현재 SignUp onDestroy입니다")
+    }
 
 }

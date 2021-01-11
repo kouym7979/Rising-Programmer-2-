@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.ActionMode
 import android.view.View
 import android.widget.CheckBox
+import android.widget.Toast
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
@@ -86,5 +87,22 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             }
     }
 
+    override fun onResume() {
+        super.onResume()
+        //회원가입 onpause이후에 onresume이 실행됨 이때 가입된 아이디를 가져오기
+
+        Toast.makeText(this,"현재 Login onResume입니다",Toast.LENGTH_SHORT)
+        Log.d("확인","현재 Login onResume입니다")
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        Toast.makeText(this,"현재 Login onRestart입니다",Toast.LENGTH_SHORT)
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        Toast.makeText(this,"현재 Login onDestory입니다",Toast.LENGTH_SHORT)
+        Log.d("확인","현재 Logtin onDestroy입니다")
+    }
 }
 

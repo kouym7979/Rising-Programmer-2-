@@ -84,4 +84,25 @@ class HomeFragment:Fragment(), View.OnClickListener {
             todo_edit.setText("")
         }
     }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d("확인","현재 homeFragment onPause입니다")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d("확인","현재 homeFragment onResume입니다")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("확인","현재 homeFragment onDestroy입니다")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d("확인","현재 homeFragment onstop입니다")
+    }
+
 }
