@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.*
 import kotlinx.android.synthetic.main.fragment_list.*
 
 class ListFragment: Fragment() {
@@ -32,17 +32,17 @@ class ListFragment: Fragment() {
         //firestore 인스턴스 초기화
         firestore = FirebaseFirestore.getInstance()
         var mAdapter = RecyclerAdapter(requireContext())
+        var mDatas :ArrayList<List_item> = arrayListOf()
 
         firestore?.collection("Memo")
-            ?.addSnapshotListener { querySanpshot, firebaseFirestoreException ->
-                memoList.clear()
-
-                for (snapshot in querySanpshot!!.documents) {
-                    var item = snapshot.toObject(List_item::class.java)
-                    memoList.add(item!!)
+            ?.addSnapshotListener(EventListener<QuerySnapshot>(){ querySnapshot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
+                if(querySnapshot!=null){
+                    mDatas.clear()
+                    /*for(snap :DocumentSnapshot in querySnapshot.documents){
+                        var hash : Map<String, Any> = snap.getData()
+                    }*/
                 }
-
-            }
+            })
 
        mAdapter.mList=memoList
 
