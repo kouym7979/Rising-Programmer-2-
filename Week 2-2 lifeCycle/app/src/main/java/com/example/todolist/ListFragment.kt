@@ -5,15 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
 import kotlinx.android.synthetic.main.fragment_list.*
+import kotlinx.android.synthetic.main.fragment_list.view.*
 
 class ListFragment: Fragment() {
 
     var firestore: FirebaseFirestore? = null
-    var memoList: ArrayList<List_item> = arrayListOf()
 
     companion object {
         //정적으로 사용되는 부분이 오브젝트이므로
@@ -27,30 +28,59 @@ class ListFragment: Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-
-        val view = inflater.inflate(R.layout.fragment_list, container, false)
-        //firestore 인스턴스 초기화
         firestore = FirebaseFirestore.getInstance()
-        var mAdapter = RecyclerAdapter(requireContext())
-        var mDatas :ArrayList<List_item> = arrayListOf()
-
-        firestore?.collection("Memo")
-            ?.addSnapshotListener(EventListener<QuerySnapshot>(){ querySnapshot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
-                if(querySnapshot!=null){
-                    mDatas.clear()
-                    /*for(snap :DocumentSnapshot in querySnapshot.documents){
-                        var hash : Map<String, Any> = snap.getData()
-                    }*/
-                }
-            })
-
-       mAdapter.mList=memoList
-
-        mAdapter.notifyDataSetChanged()
-
-        list_recycler.adapter = mAdapter
+        val view = LayoutInflater.from(inflater.context).inflate(R.layout.fragment_list, container, false)
+        //firestore 인스턴스 초기화
+        view.list_recycler.adapter= ListRecyclerviewAdapter()
+        view.list_recycler.layoutManager= LinearLayoutManager(activity)
 
         return view
     }
+    inner class ListRecyclerviewAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+        val memo_info : ArrayList<MemoItem> // 문서의 해당 uid안에 있는 컨텐츠 정보를 담고 있는 리스트
+        val memo_uid : ArrayList<String>//문서의 uid 관리
+
+        init{
+            memo_info = ArrayList()
+            memo_uid= ArrayList()
+
+            //현재 로그인된 유저의 uid
+            var uid = FirebaseAuth.getInstance().currentUser?.uid
+            firestore?.collection("sub_memo")?.orderBy("date")?.addSnapshotListener{ querySnapshot, error: FirebaseFirestoreException? ->
+
+                for(snapshot in querySnapshot!!.documents){
+                    var item = snapshot.toObject(MemoItem::class.java)//만들어둔 데이터 모델로 매핑됨
+                    memo_info.add(item!!)
+                    memo_uid.add(snapshot.id)
+
+                }
+                notifyDataSetChanged()//데이터베이스가 변경될 때마다 새로고침 됨
+            }
+
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+            var view = LayoutInflater.from(parent.context).inflate(R.layout.list_item,parent,false)
+
+            return CustomViewHolder(view)
+        }
+
+        override fun getItemCount(): Int {
+            return memo_info.size;
+        }
+
+        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+           var viewHolder = (holder as CustomViewHolder)
+           
+
+        }
+        inner class CustomViewHolder(view: View?) : RecyclerView.ViewHolder(view!!) {
+
+        }
+
+    }
+
+    
 
 }

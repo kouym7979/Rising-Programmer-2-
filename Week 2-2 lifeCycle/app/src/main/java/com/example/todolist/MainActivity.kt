@@ -24,6 +24,8 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     private lateinit var mAuth:FirebaseAuth
     private var activityMainBinding: ActivityMainBinding?= null
     //private var bottomNav =findViewById<BottomNavigationView>(R.id.bottomNav)
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)

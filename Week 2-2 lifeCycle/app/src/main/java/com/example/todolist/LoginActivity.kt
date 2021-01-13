@@ -92,7 +92,11 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         //회원가입 onpause이후에 onresume이 실행됨 이때 가입된 아이디를 가져오기
 
         Toast.makeText(this,"현재 Login onResume입니다",Toast.LENGTH_SHORT)
-        Log.d("확인","현재 Login onResume입니다")
+        //회원가입 후 넘어 왔을 때 가입한 이메일이 입력됩니다.
+        var email: String =intent?.getStringExtra("email").toString()
+        if(email!=null)
+            emailEdit.setText(email)
+
     }
 
     override fun onRestart() {
