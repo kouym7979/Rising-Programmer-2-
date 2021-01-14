@@ -55,6 +55,7 @@ class SignUpActivity : AppCompatActivity() {
                     var intent = Intent(this,LoginActivity::class.java)
                     intent.putExtra("email",data.email)
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    Log.d("확인","이메일 정보확인"+data.email)
                     startActivity(intent)
                 } else {
                     Log.d("확인", task.exception.toString())

@@ -11,6 +11,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
 import kotlinx.android.synthetic.main.fragment_list.*
 import kotlinx.android.synthetic.main.fragment_list.view.*
+import kotlinx.android.synthetic.main.list_item.*
+import kotlinx.android.synthetic.main.list_item.view.*
 
 class ListFragment: Fragment() {
 
@@ -48,7 +50,8 @@ class ListFragment: Fragment() {
             //현재 로그인된 유저의 uid
             var uid = FirebaseAuth.getInstance().currentUser?.uid
             firestore?.collection("sub_memo")?.orderBy("date")?.addSnapshotListener{ querySnapshot, error: FirebaseFirestoreException? ->
-
+                memo_info.clear()
+                memo_uid.clear()
                 for(snapshot in querySnapshot!!.documents){
                     var item = snapshot.toObject(MemoItem::class.java)//만들어둔 데이터 모델로 매핑됨
                     memo_info.add(item!!)
@@ -71,8 +74,11 @@ class ListFragment: Fragment() {
         }
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-           var viewHolder = (holder as CustomViewHolder)
-           
+           var viewHolder = (holder as CustomViewHolder).itemView
+
+            viewHolder.selected_day.text=memo_info!![position].date
+            viewHolder.list_memo.text=memo_info!![position].memo
+            viewHolder.list_tag.text=memo_info!![position].memo_tag
 
         }
         inner class CustomViewHolder(view: View?) : RecyclerView.ViewHolder(view!!) {

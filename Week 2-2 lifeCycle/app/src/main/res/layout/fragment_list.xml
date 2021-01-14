@@ -13,6 +13,9 @@
         android:paddingLeft="8dp"
         android:hint="@string/search_list"
         android:background="@drawable/edit_background"
+        android:layout_marginLeft="10sp"
+        android:layout_marginRight="10sp"
+        android:padding="8sp"
         />
 
 

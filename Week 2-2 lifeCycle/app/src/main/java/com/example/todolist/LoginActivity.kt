@@ -44,8 +44,12 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             }
             btn_login->{
                 Log.d("확인","Login Activity 로그인 버튼"+emailEdit.text.toString()+" "+passEdit.text.toString())
-               loginStart(emailEdit.text.toString(),passEdit.text.toString())
-
+                if(passEdit.text.toString()!=null && emailEdit.text.toString()!=null) {
+                    loginStart(emailEdit.text.toString(), passEdit.text.toString())
+                }else
+                {
+                    Toast.makeText(this,"아이디 및 비밀번호를 확인해주세요.",Toast.LENGTH_SHORT)
+                }
             }
         }
     }
@@ -96,6 +100,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         var email: String =intent?.getStringExtra("email").toString()
         if(email!=null)
             emailEdit.setText(email)
+        else emailEdit.setText(" ")
 
     }
 
