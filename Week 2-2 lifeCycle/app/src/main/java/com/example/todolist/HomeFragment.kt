@@ -25,9 +25,8 @@ class HomeFragment : Fragment(), View.OnClickListener {
     private var memo: String? = null
     private var memo_id: String?= null
     var firestore: FirebaseFirestore? = null
+    private var memo_tag:String?=null
 
-
-    private var select_tag : String?=null
     companion object {
         //정적으로 사용되는 부분이 오브젝트이므로
         const val TAG: String = "로그"
@@ -44,47 +43,22 @@ class HomeFragment : Fragment(), View.OnClickListener {
         firestore = FirebaseFirestore.getInstance()
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
-       /* var spinner_adapter = ArrayAdapter(requireContext(),android.R.layout.simple_spinner_dropdown_item,items)
-        check_tag.adapter=spinner_adapter
-
-        check_tag.onItemSelectedListener=object : OnItemClickListener, OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long
-            )
-            {
-               when(position){
-                   0->{
-                       select_tag=items[0]
-                       Log.d("확인","선택된 태그는"+select_tag)
-                   }
-                   1->{
-                       select_tag=items[1]
-                       Log.d("확인","선택된 태그는"+select_tag)
-                   }
-                   2->{
-                       select_tag=items[2]
-                       Log.d("확인","선택된 태그는"+select_tag)
-                   }
-                   3->{
-                       select_tag=items[3]
-                       Log.d("확인","선택된 태그는"+select_tag)
-                   }
-               }
+        view.radio_group.setOnCheckedChangeListener { group, checkedId ->
+            when(checkedId){
+                R.id.r_btn1->{
+                    memo_tag="할일"
+                }
+                R.id.r_btn2->{
+                    memo_tag="프로젝트"
+                }
+                R.id.r_btn3->{
+                    memo_tag="운동"
+                }
+                R.id.r_btn4->{
+                    memo_tag="약속"
+                }
             }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                select_tag=items[0]
-            }
-
-            override fun onItemClick(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-
-            }
-
-        }*/
+        }
         view.home_calendar.setOnDateChangeListener { view, year, month, dayOfMonth ->
             select_day = String.format("%d /%d /%d", year, month + 1, dayOfMonth)
             Log.d("확인", "선택한 날짜는" + select_day)
@@ -110,12 +84,13 @@ class HomeFragment : Fragment(), View.OnClickListener {
             Log.d("확인", "작성된 메모는" + todo_edit.text.toString())
 
             //파이어베이스에 저장되는 데이터 모델
-            var sub_memo = MemoItem()
 
+            var sub_memo = MemoItem()
             sub_memo.date = select_day!!
             sub_memo.memo = todo_edit.text.toString()
             sub_memo.memo_id = MemoId.toString()
-            sub_memo.memo_tag = select_tag
+            sub_memo.memo_tag = memo_tag
+
             Log.d("확인", "저장된 데이터: " + sub_memo.date + "메모는: " + sub_memo.memo)
 
             firestore?.collection("sub_memo")?.document()?.set(sub_memo)

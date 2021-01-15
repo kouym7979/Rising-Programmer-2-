@@ -76,19 +76,24 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun loginStart(email:String, pws:String){
         Log.d("확인","Login Activity 로그인 버튼"+emailEdit.text.toString()+" "+passEdit.text.toString())
-        mAuth.signInWithEmailAndPassword(emailEdit.text.toString(),passEdit.text.toString())
-            .addOnCompleteListener(this){task->
-                if(task.isSuccessful){
-                    Log.d("확인","로그인에 성공했습니다")
-                    var intent : Intent = Intent(this,MainActivity::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                    startActivity(intent)
-                }
-                else{
-                    Log.d("확인",task.exception.toString())
-                }
+        if(email.equals("") || pws.equals(""))
+        {
+            Log.d("확인","이메일:"+email+"비밀번호:"+pws)
+            Toast.makeText(this,"이메일 및 비밀번호를 확인하세요",Toast.LENGTH_SHORT)
+        }else {
+            mAuth.signInWithEmailAndPassword(emailEdit.text.toString(), passEdit.text.toString())
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        Log.d("확인", "로그인에 성공했습니다")
+                        var intent: Intent = Intent(this, MainActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        startActivity(intent)
+                    } else {
+                        Log.d("확인", task.exception.toString())
+                    }
 
-            }
+                }
+        }
     }
 
     override fun onResume() {
@@ -98,9 +103,9 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         Toast.makeText(this,"현재 Login onResume입니다",Toast.LENGTH_SHORT)
         //회원가입 후 넘어 왔을 때 가입한 이메일이 입력됩니다.
         var email: String =intent?.getStringExtra("email").toString()
-        if(email!=null)
-            emailEdit.setText(email)
-        else emailEdit.setText(" ")
+        if(email.equals("null"))
+            emailEdit.setText("")
+        else emailEdit.setText(email)
 
     }
 
