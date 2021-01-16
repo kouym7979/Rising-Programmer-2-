@@ -1,5 +1,6 @@
 package com.example.todolist
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -26,7 +27,8 @@ class HomeFragment : Fragment(), View.OnClickListener {
     private var memo_id: String?= null
     var firestore: FirebaseFirestore? = null
     private var memo_tag:String?=null
-
+    private var photo:String?=null
+    private var check_int :Int =0
     companion object {
         //정적으로 사용되는 부분이 오브젝트이므로
         const val TAG: String = "로그"
@@ -43,10 +45,16 @@ class HomeFragment : Fragment(), View.OnClickListener {
         firestore = FirebaseFirestore.getInstance()
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
+        var bundle:Bundle ?=null
+        photo=bundle?.getString("url")
+        check_int=bundle!!.getInt("check")
+
         view.radio_group.setOnCheckedChangeListener { group, checkedId ->
             when(checkedId){
                 R.id.r_btn1->{
                     memo_tag="할일"
+
+
                 }
                 R.id.r_btn2->{
                     memo_tag="프로젝트"
@@ -65,8 +73,9 @@ class HomeFragment : Fragment(), View.OnClickListener {
             s_date.text = select_day
         }
 
-        view.btn_write.setOnClickListener(this)
 
+        view.btn_write.setOnClickListener(this)
+        view.btn_photo.setOnClickListener(this)
         return view
     }
 
@@ -74,30 +83,39 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
 
-        if(select_day==null){
-            Toast.makeText(requireContext(),"날짜를 선택해주세요",Toast.LENGTH_SHORT)
-        }else {
-            Log.d("확인", "메모 전송 버튼이 눌렸습니다")
+        when(v){
+           btn_write->{
+               if(select_day==null){
+                   Toast.makeText(requireContext(),"날짜를 선택해주세요",Toast.LENGTH_SHORT)
+               }else {
+                   Log.d("확인", "메모 전송 버튼이 눌렸습니다")
 
-            var MemoId = firestore?.collection("Memo")?.document()?.id
-            var intent: Intent? = null
-            Log.d("확인", "작성된 메모는" + todo_edit.text.toString())
+                   var MemoId = firestore?.collection("Memo")?.document()?.id
+                   var intent: Intent? = null
+                   Log.d("확인", "작성된 메모는" + todo_edit.text.toString())
 
-            //파이어베이스에 저장되는 데이터 모델
+                   //파이어베이스에 저장되는 데이터 모델
 
-            var sub_memo = MemoItem()
-            sub_memo.date = select_day!!
-            sub_memo.memo = todo_edit.text.toString()
-            sub_memo.memo_id = MemoId.toString()
-            sub_memo.memo_tag = memo_tag
+                   var sub_memo = MemoItem()
+                   sub_memo.date = select_day!!
+                   sub_memo.memo = todo_edit.text.toString()
+                   sub_memo.memo_id = MemoId.toString()
+                   sub_memo.memo_tag = memo_tag
 
-            Log.d("확인", "저장된 데이터: " + sub_memo.date + "메모는: " + sub_memo.memo)
+                   Log.d("확인", "저장된 데이터: " + sub_memo.date + "메모는: " + sub_memo.memo)
 
-            firestore?.collection("sub_memo")?.document()?.set(sub_memo)
+                   firestore?.collection("sub_memo")?.document()?.set(sub_memo)
 
-            Toast.makeText(activity, "메모가 등록되었습니다", Toast.LENGTH_SHORT)
-            todo_edit.setText("")
+                   Toast.makeText(activity, "메모가 등록되었습니다", Toast.LENGTH_SHORT)
+                   todo_edit.setText("")
+               }
+            }
+            btn_photo->{
+                val intent = Intent(requireContext(),AddPhoto::class.java)
+                startActivity(intent)
+            }
         }
+
     }
 
     override fun onPause() {
@@ -107,6 +125,8 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
     override fun onResume() {
         super.onResume()
+        if(check_int==1)
+            memo_image.setImageURI(photo.)
         Log.d("확인", "현재 homeFragment onResume입니다")
     }
 
@@ -119,5 +139,6 @@ class HomeFragment : Fragment(), View.OnClickListener {
         super.onStop()
         Log.d("확인", "현재 homeFragment onstop입니다")
     }
+
 
 }

@@ -24,7 +24,8 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     private lateinit var mAuth:FirebaseAuth
     private var activityMainBinding: ActivityMainBinding?= null
     //private var bottomNav =findViewById<BottomNavigationView>(R.id.bottomNav)
-
+    var p_url:String ?=null
+    var check_url:Int =0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,9 +81,19 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
             }
             R.id.menu_list -> {
-                Log.d("확인", "리스트버튼 클릭")
+
+                p_url=intent.getStringExtra("url")
+                check_url=intent.getIntExtra("check",0)
+
+                Log.d("확인", "리스트버튼 클릭 check_url넘버:"+check_url)
+
                 listFragment= ListFragment.newInstance()
-                supportFragmentManager.beginTransaction().replace(R.id.frame_layout, listFragment).commit()
+                supportFragmentManager.beginTransaction().replace(R.id.frame_layout, listFragment.apply {
+                    arguments=Bundle().apply {
+                        putString("url",p_url)
+                        putInt("check",check_url)
+                    }
+                }).commit()
 
             }
             R.id.menu_mypage -> {

@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
@@ -17,6 +19,9 @@ import kotlinx.android.synthetic.main.list_item.view.*
 class ListFragment: Fragment() {
 
     var firestore: FirebaseFirestore? = null
+    private var text_color:String?=null
+    private var memo_uid:String?=null
+    private var itemTouchHelper :ItemTouchHelper?=null
 
     companion object {
         //정적으로 사용되는 부분이 오브젝트이므로
@@ -80,6 +85,22 @@ class ListFragment: Fragment() {
             viewHolder.list_memo.text=memo_info!![position].memo
             viewHolder.list_tag.text=memo_info!![position].memo_tag
 
+
+            text_color=memo_info!![position].memo_tag
+
+            if(text_color.equals("할일")){
+                viewHolder.list_tag.setTextColor(ContextCompat.getColor(requireContext(),R.color.purple_200))
+            }
+            else if(text_color.equals("프로젝트")){
+                viewHolder.list_tag.setTextColor(ContextCompat.getColor(requireContext(),R.color.warningColor))
+            }
+            else if(text_color.equals("약속")){
+                viewHolder.list_tag.setTextColor(ContextCompat.getColor(requireContext(),R.color.welcomeColor))
+            }
+            else if(text_color.equals("운동")){
+                viewHolder.list_tag.setTextColor(ContextCompat.getColor(requireContext(),R.color.purple_500))
+            }
+
         }
         inner class CustomViewHolder(view: View?) : RecyclerView.ViewHolder(view!!) {
 
@@ -87,6 +108,7 @@ class ListFragment: Fragment() {
 
     }
 
-    
+
+
 
 }
