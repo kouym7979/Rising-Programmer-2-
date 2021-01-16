@@ -6,7 +6,8 @@ data class MemoItem(
     var date:String?=null,
     var memo_id : String ?=null,
     var photoUrl: String?=null,
-    var memo_tag:String ?=null
+    var memo_tag:String ?=null,
+    var user_uid:String?=null
 
 )
 

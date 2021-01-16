@@ -79,7 +79,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         if(email.equals("") || pws.equals(""))
         {
             Log.d("확인","이메일:"+email+"비밀번호:"+pws)
-            Toast.makeText(this,"이메일 및 비밀번호를 확인하세요",Toast.LENGTH_SHORT)
+            Toast.makeText(this,"이메일 및 비밀번호를 확인하세요",Toast.LENGTH_SHORT).show()
         }else {
             mAuth.signInWithEmailAndPassword(emailEdit.text.toString(), passEdit.text.toString())
                 .addOnCompleteListener(this) { task ->

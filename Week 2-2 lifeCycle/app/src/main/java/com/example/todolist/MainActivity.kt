@@ -15,8 +15,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener,
-    View.OnClickListener {
+class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var homeFragment: HomeFragment
     private lateinit var listFragment: ListFragment
@@ -47,8 +46,10 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         btn_logout.setOnClickListener{
             var builder = AlertDialog.Builder(this)
             var log_dialog=layoutInflater.inflate(R.layout.logout_dialog,null)
-            builder.setView(log_dialog)
 
+            var ad: AlertDialog//alertdialog의 dismiss를 이용하기 위해서 builder를 연결해줘야함
+            ad=builder.create()
+            ad.setView(log_dialog)
             val yes_btn=log_dialog.findViewById<Button>(R.id.yesButton)
             yes_btn.setOnClickListener {
                 mAuth.signOut()
@@ -59,10 +60,10 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             }
             val no_btn=log_dialog.findViewById<Button>(R.id.noButton)
             no_btn.setOnClickListener {
-
+                ad.dismiss()
             }
 
-            builder.show()
+            ad.show()
         }
 
     }
@@ -88,12 +89,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 Log.d("확인", "리스트버튼 클릭 check_url넘버:"+check_url)
 
                 listFragment= ListFragment.newInstance()
-                supportFragmentManager.beginTransaction().replace(R.id.frame_layout, listFragment.apply {
-                    arguments=Bundle().apply {
-                        putString("url",p_url)
-                        putInt("check",check_url)
-                    }
-                }).commit()
+                supportFragmentManager.beginTransaction().replace(R.id.frame_layout, listFragment).commit()
 
             }
             R.id.menu_mypage -> {
@@ -106,8 +102,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     }
 
 
-    override fun onClick(v: View?) {
 
-    }
 
 }

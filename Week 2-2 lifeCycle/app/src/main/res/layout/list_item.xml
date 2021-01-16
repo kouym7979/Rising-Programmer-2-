@@ -47,6 +47,6 @@
         android:src="@drawable/ic_vert"
         android:layout_marginLeft="10sp"
         android:background="@android:color/transparent"
-        android:id="@+id/list_tag_btn"/>
+        android:id="@+id/list_btn"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
