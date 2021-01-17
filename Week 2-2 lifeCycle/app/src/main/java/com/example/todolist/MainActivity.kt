@@ -7,6 +7,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
@@ -22,6 +23,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     private lateinit var mypageFragment: MypageFragment
     private lateinit var mAuth:FirebaseAuth
     private var activityMainBinding: ActivityMainBinding?= null
+    private var filter:String ="전체"
     //private var bottomNav =findViewById<BottomNavigationView>(R.id.bottomNav)
     var p_url:String ?=null
     var check_url:Int =0
@@ -33,6 +35,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         setFrag()
         val binding : ActivityMainBinding= ActivityMainBinding.inflate(layoutInflater)
         // 뷰 바인딩과 연결
+
         activityMainBinding =binding
         setContentView(activityMainBinding!!.root)
 
@@ -63,8 +66,11 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 ad.dismiss()
             }
 
+
             ad.show()
         }
+
+
 
     }
 
@@ -89,6 +95,9 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 Log.d("확인", "리스트버튼 클릭 check_url넘버:"+check_url)
 
                 listFragment= ListFragment.newInstance()
+                var bundle : Bundle ?=null
+                bundle?.putString("filter",filter)
+                listFragment.arguments=bundle
                 supportFragmentManager.beginTransaction().replace(R.id.frame_layout, listFragment).commit()
 
             }
@@ -102,6 +111,22 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     }
 
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
 
+        menuInflater.inflate(R.menu.list_menu,menu)
 
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId)
+        {
+            R.id.first->{ filter="할일" }
+            R.id.second->{ filter="프로젝트" }
+            R.id.third->{ filter ="운동"}
+            R.id.fourth->{ filter ="약속"}
+            R.id.five->{ filter ="전체"}
+        }
+        return super.onOptionsItemSelected(item)
+    }
 }

@@ -7,10 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.RadioButton
-import android.widget.Toast
+import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -36,6 +33,7 @@ class ListFragment: Fragment() {
     private var mAuth:FirebaseAuth?=null
     private var memo_tag:String?=null
     private var u_memo:String ?= null
+    private var filter:String?=null
     companion object {
         //정적으로 사용되는 부분이 오브젝트이므로
         const val TAG: String = "로그"
@@ -48,6 +46,9 @@ class ListFragment: Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
+        arguments?.let {
+            filter=it.getString("filter")
+        }
         firestore = FirebaseFirestore.getInstance()
 
         val view = LayoutInflater.from(inflater.context).inflate(R.layout.fragment_list, container, false)
@@ -69,11 +70,11 @@ class ListFragment: Fragment() {
 
             //현재 로그인된 유저의 uid
             var uid = FirebaseAuth.getInstance().currentUser?.uid
-            firestore?.collection("sub_memo")
+            firestore?.collection("sub_memo")!!.whereEqualTo("memo_tag","운동")
                 ?.orderBy("date")?.addSnapshotListener{ querySnapshot, error: FirebaseFirestoreException? ->
                 memo_info.clear()
                 memo_uid.clear()
-                for(snapshot in querySnapshot!!.documents){
+                for(snapshot in querySnapshot!!.documents){//여기 부분 해결해야함
                     var item = snapshot.toObject(MemoItem::class.java)//만들어둔 데이터 모델로 매핑됨
                     if(item?.user_uid==uid) {//작성자의 메모만 보인다.
                         memo_info.add(item!!)
@@ -153,19 +154,32 @@ class ListFragment: Fragment() {
 
             text_color=memo_info!![position].memo_tag
 
-            if(text_color.equals("할일")){
-                viewHolder.list_tag.setTextColor(ContextCompat.getColor(requireContext(),R.color.purple_200))
-            }
-            else if(text_color.equals("프로젝트")){
-                viewHolder.list_tag.setTextColor(ContextCompat.getColor(requireContext(),R.color.warningColor))
-            }
-            else if(text_color.equals("약속")){
-                viewHolder.list_tag.setTextColor(ContextCompat.getColor(requireContext(),R.color.welcomeColor))
-            }
-            else if(text_color.equals("운동")){
-                viewHolder.list_tag.setTextColor(ContextCompat.getColor(requireContext(),R.color.purple_500))
-            }
+            changeColor(text_color.toString(),viewHolder.list_tag)
 
+
+            viewHolder.list_memo.setOnClickListener {
+                var all_builder = AlertDialog.Builder(requireContext())
+                var all_dialog=layoutInflater.inflate(R.layout.all_dialog,null)
+                var all_ad :AlertDialog=all_builder.create()
+                all_ad.setView(all_dialog)
+
+                var all_date = all_dialog.findViewById<TextView>(R.id.all_date)
+                var all_memo = all_dialog.findViewById<TextView>(R.id.all_memo)
+                var all_tag= all_dialog.findViewById<TextView>(R.id.all_tag)
+                var all_btn=all_dialog.findViewById<ImageButton>(R.id.all_btn)
+
+                all_date.text=memo_info!![position].date
+                all_memo.text=memo_info!![position].memo
+                all_tag.text=memo_info!![position].memo_tag
+
+                changeColor(memo_info!![position].memo_tag.toString(),all_tag)
+
+                all_btn.setOnClickListener {
+                    all_ad.dismiss()
+                }
+
+                all_ad.show()
+            }
         }
         inner class CustomViewHolder(view: View?) : RecyclerView.ViewHolder(view!!) {
 
@@ -181,7 +195,7 @@ class ListFragment: Fragment() {
     override fun onResume() {
         super.onResume()
 
-        Log.d("확인", "현재 listFragment onResume입니다")
+        Log.d("확인", "현재 listFragment onResume입니다"+filter.toString())
     }
 
     override fun onDestroy() {
@@ -194,5 +208,18 @@ class ListFragment: Fragment() {
         Log.d("확인", "현재 listFragment onstop입니다")
     }
 
-
+    fun changeColor(check : String, tag : TextView){
+        if(check.equals("할일")){
+            tag.setTextColor(ContextCompat.getColor(requireContext(),R.color.purple_200))
+        }
+        else if(check.equals("프로젝트")){
+            tag.setTextColor(ContextCompat.getColor(requireContext(),R.color.warningColor))
+        }
+        else if(check.equals("약속")) {
+            tag.setTextColor(ContextCompat.getColor(requireContext(), R.color.welcomeColor))
+        }
+        else if(check.equals("운동")){
+            tag.setTextColor(ContextCompat.getColor(requireContext(),R.color.purple_500))
+        }
+    }
 }

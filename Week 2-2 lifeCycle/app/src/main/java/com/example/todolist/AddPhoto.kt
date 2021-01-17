@@ -24,7 +24,7 @@ class AddPhoto : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if(requestCode==PICK_IMAGE_FROM_ALBUM){
+       /* if(requestCode==PICK_IMAGE_FROM_ALBUM){
             if(requestCode== Activity.RESULT_OK) {
                 memo_image.setImageURI(data?.data)
                 photo_url=data?.data.toString()
@@ -36,6 +36,6 @@ class AddPhoto : AppCompatActivity() {
                 Log.d("확인","사진이 저장되었습니다.")
             }
 
-        }
+        }*/
     }
 }
