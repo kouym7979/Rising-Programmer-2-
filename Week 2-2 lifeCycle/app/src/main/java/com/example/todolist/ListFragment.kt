@@ -8,19 +8,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
+import android.widget.RadioButton
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.todolist.databinding.ActivityAddPhotoBinding.inflate
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_home.view.*
 import kotlinx.android.synthetic.main.fragment_list.*
 import kotlinx.android.synthetic.main.fragment_list.view.*
 import kotlinx.android.synthetic.main.list_item.*
 import kotlinx.android.synthetic.main.list_item.view.*
+import kotlinx.android.synthetic.main.update_dialog.*
 
 class ListFragment: Fragment() {
 
@@ -29,6 +34,8 @@ class ListFragment: Fragment() {
     private var memo_uid:String?=null
     private var itemTouchHelper :ItemTouchHelper?=null
     private var mAuth:FirebaseAuth?=null
+    private var memo_tag:String?=null
+    private var u_memo:String ?= null
     companion object {
         //정적으로 사용되는 부분이 오브젝트이므로
         const val TAG: String = "로그"
@@ -47,6 +54,7 @@ class ListFragment: Fragment() {
         //firestore 인스턴스 초기화
         view.list_recycler.adapter= ListRecyclerviewAdapter()
         view.list_recycler.layoutManager= LinearLayoutManager(activity)
+
 
         return view
     }
@@ -102,10 +110,34 @@ class ListFragment: Fragment() {
             viewHolder.list_btn.setOnClickListener{
 
                 val up_btn=list_dialog.findViewById<Button>(R.id.update_Button)
+                //수정버튼을 눌렀을 때!
                 up_btn.setOnClickListener {
-
                     ad.dismiss()
+                    var update_builder = AlertDialog.Builder(requireContext())
+                    var update_dialog=layoutInflater.inflate(R.layout.update_dialog,null)
+                    var update_ad :AlertDialog=update_builder.create()
+                    update_ad.setView(update_dialog)
+
+                    val u_edit=update_dialog.findViewById<EditText>(R.id.list_memo_edit)
+                    val up_yes_btn=update_dialog.findViewById<Button>(R.id.update_yesButton)
+                    val up_no_btn=update_dialog.findViewById<Button>(R.id.update_noButton)
+
+                    up_yes_btn.setOnClickListener{
+                        u_memo=u_edit.text.toString()
+                        firestore?.collection("sub_memo")?.document(memo_info!![position].memo_id!!)
+                            ?.update("memo",u_memo)
+
+                        notifyDataSetChanged()
+                        Toast.makeText(requireContext(),"수정이 완료되었습니다",Toast.LENGTH_SHORT).show()
+                        update_ad.dismiss()
+                    }
+                    up_no_btn.setOnClickListener {
+                       update_ad.dismiss()
+                    }
+
+                    update_ad.show()
                 }
+                //삭제 버튼을 눌렀을 때!!
                 val del_btn=list_dialog.findViewById<Button>(R.id.delete_Button)
                 del_btn.setOnClickListener {
                     Log.d("확인:",memo_info!![position].memo_id!!)
@@ -141,7 +173,26 @@ class ListFragment: Fragment() {
 
     }
 
+    override fun onPause() {
+        super.onPause()
+        Log.d("확인", "현재 listFragment onPause입니다")
+    }
 
+    override fun onResume() {
+        super.onResume()
+
+        Log.d("확인", "현재 listFragment onResume입니다")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("확인", "현재 listFragment onDestroy입니다")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d("확인", "현재 listFragment onstop입니다")
+    }
 
 
 }

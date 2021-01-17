@@ -9,10 +9,19 @@
         <menu>
             <item
                 android:id="@+id/first"
-                android:title="삭제" />
+                android:title="할일" />
             <item
                 android:id="@+id/second"
-                android:title="수정" />
+                android:title="프로젝트" />
+            <item
+                android:id="@+id/third"
+                android:title="운동" />
+            <item
+                android:id="@+id/fourth"
+                android:title="약속" />
+            <item
+                android:id="@+id/five"
+                android:title="전체" />
         </menu>
     </item>
 </menu>

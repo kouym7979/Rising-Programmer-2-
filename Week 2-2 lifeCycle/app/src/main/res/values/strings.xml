@@ -4,4 +4,6 @@
     <string name="selected_day">날짜:</string>
     <string name="search_list">검색어를 입력해주세요</string>
     <string name="home_sdate">날짜를 선택해주세요</string>
+    <string name="list_edit">메모를 작성해주세요</string>
+    <string name="update_memo">수정</string>
 </resources>
