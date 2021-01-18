@@ -8,7 +8,6 @@ data class MemoItem(
     var photoUrl: String?=null,
     var memo_tag:String ?=null,
     var user_uid:String?=null
-
 )
 
 data class User_info(

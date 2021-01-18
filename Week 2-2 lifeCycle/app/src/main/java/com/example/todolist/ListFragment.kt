@@ -1,7 +1,9 @@
 package com.example.todolist
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,6 +18,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.todolist.databinding.ActivityAddPhotoBinding.inflate
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
+import com.google.firebase.storage.FirebaseStorage
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import kotlinx.android.synthetic.main.fragment_list.*
@@ -23,6 +27,9 @@ import kotlinx.android.synthetic.main.fragment_list.view.*
 import kotlinx.android.synthetic.main.list_item.*
 import kotlinx.android.synthetic.main.list_item.view.*
 import kotlinx.android.synthetic.main.update_dialog.*
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class ListFragment: Fragment() {
 
@@ -34,6 +41,11 @@ class ListFragment: Fragment() {
     private var memo_tag:String?=null
     private var u_memo:String ?= null
     private var filter:String?=null
+    private var sub_id:String?=null
+    var photo_uri : Uri?=null
+
+    var storage : FirebaseStorage?=null
+    var PICK_IMAGE_FROM_ALBUM=0
     companion object {
         //정적으로 사용되는 부분이 오브젝트이므로
         const val TAG: String = "로그"
@@ -56,7 +68,15 @@ class ListFragment: Fragment() {
         view.list_recycler.adapter= ListRecyclerviewAdapter()
         view.list_recycler.layoutManager= LinearLayoutManager(activity)
 
-
+        var radio=view.findViewById<RadioGroup>(R.id.radio_group)
+        radio.setOnCheckedChangeListener { group, checkedId ->
+            when(checkedId){
+                R.id.r_btn1->{ memo_tag="할일" }
+                R.id.r_btn2->{ memo_tag="프로젝트"}
+                R.id.r_btn3->{ memo_tag="운동" }
+                R.id.r_btn4->{ memo_tag="약속" }
+            }
+        }
         return view
     }
     inner class ListRecyclerviewAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -70,19 +90,37 @@ class ListFragment: Fragment() {
 
             //현재 로그인된 유저의 uid
             var uid = FirebaseAuth.getInstance().currentUser?.uid
-            firestore?.collection("sub_memo")!!.whereEqualTo("memo_tag","운동")
-                ?.orderBy("date")?.addSnapshotListener{ querySnapshot, error: FirebaseFirestoreException? ->
-                memo_info.clear()
-                memo_uid.clear()
-                for(snapshot in querySnapshot!!.documents){//여기 부분 해결해야함
-                    var item = snapshot.toObject(MemoItem::class.java)//만들어둔 데이터 모델로 매핑됨
-                    if(item?.user_uid==uid) {//작성자의 메모만 보인다.
-                        memo_info.add(item!!)
-                        memo_uid.add(snapshot.id)
+                firestore?.collection("sub_memo")
+                    ?.whereEqualTo("memo_tag","프로젝트")
+                    //?.orderBy("date")
+                    ?.addSnapshotListener { querySnapshot, error: FirebaseFirestoreException? ->
+                        memo_info.clear()
+                        memo_uid.clear()
+                        for (snapshot in querySnapshot!!.documents) {//여기 부분 해결해야함
+                            var item = snapshot.toObject(MemoItem::class.java)//만들어둔 데이터 모델로 매핑됨
+                            if (item?.user_uid == uid) {//작성자의 메모만 보인다.
+                                memo_info.add(item!!)
+                                memo_uid.add(snapshot.id)
+                            }
+                        }
+                        notifyDataSetChanged()//데이터베이스가 변경될 때마다 새로고침 됨
                     }
-                }
-                notifyDataSetChanged()//데이터베이스가 변경될 때마다 새로고침 됨
-            }
+
+                /*firestore?.collection("sub_memo")
+                    ?.whereEqualTo("memo_tag",memo_tag)
+                    ?.addSnapshotListener { querySnapshot, error: FirebaseFirestoreException? ->
+                        memo_info.clear()
+                        memo_uid.clear()
+                        for (snapshot in querySnapshot!!.documents) {//여기 부분 해결해야함
+                            var item = snapshot.toObject(MemoItem::class.java)//만들어둔 데이터 모델로 매핑됨
+                            if (item?.user_uid == uid) {//작성자의 메모만 보인다.
+                                memo_info.add(item!!)
+                                memo_uid.add(snapshot.id)
+                            }
+                        }
+                        notifyDataSetChanged()//데이터베이스가 변경될 때마다 새로고침 됨
+                    }*/
+
 
         }
 
@@ -107,7 +145,7 @@ class ListFragment: Fragment() {
             viewHolder.selected_day.text=memo_info!![position].date
             viewHolder.list_memo.text=memo_info!![position].memo
             viewHolder.list_tag.text=memo_info!![position].memo_tag
-
+            sub_id=memo_info!![position].memo_id
             viewHolder.list_btn.setOnClickListener{
 
                 val up_btn=list_dialog.findViewById<Button>(R.id.update_Button)
@@ -167,15 +205,30 @@ class ListFragment: Fragment() {
                 var all_memo = all_dialog.findViewById<TextView>(R.id.all_memo)
                 var all_tag= all_dialog.findViewById<TextView>(R.id.all_tag)
                 var all_btn=all_dialog.findViewById<ImageButton>(R.id.all_btn)
+                var all_photobtn=all_dialog.findViewById<Button>(R.id.btn_photo)
+                var all_image = all_dialog.findViewById<ImageView>(R.id.all_image)
 
                 all_date.text=memo_info!![position].date
                 all_memo.text=memo_info!![position].memo
                 all_tag.text=memo_info!![position].memo_tag
 
+                if(!memo_info!![position].photoUrl.equals("null"))//사진이 있을 경우
+                {
+                    Picasso.get()
+                        .load(memo_info!![position].photoUrl)
+                        .into(all_image)
+                }
+
                 changeColor(memo_info!![position].memo_tag.toString(),all_tag)
 
                 all_btn.setOnClickListener {
                     all_ad.dismiss()
+                }
+                all_photobtn.setOnClickListener {
+                    all_ad.dismiss()
+                    var photoPickerIntent = Intent(Intent.ACTION_GET_CONTENT)
+                    photoPickerIntent.type="image/*"
+                    startActivityForResult(photoPickerIntent, PICK_IMAGE_FROM_ALBUM)
                 }
 
                 all_ad.show()
@@ -220,6 +273,34 @@ class ListFragment: Fragment() {
         }
         else if(check.equals("운동")){
             tag.setTextColor(ContextCompat.getColor(requireContext(),R.color.purple_500))
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if(requestCode==PICK_IMAGE_FROM_ALBUM){
+            if(requestCode== Activity.RESULT_OK) {
+                photo_uri=data?.data
+                Log.d("확인","선택된 사진:"+photo_uri.toString())
+                contentUpload()
+            }
+        }
+    }
+    fun contentUpload(){
+
+        val timeStamp= SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val imageFileName="JPEG_"+timeStamp+"_.png"
+        Log.d("확인","사진 업로드 메소드입니다")
+        val storeRef=storage?.reference?.child("sub_memo")?.child(imageFileName)
+        storeRef?.putFile(photo_uri!!)?.addOnSuccessListener { taskSnapshot ->
+            Log.d("확인", "사진이 업로드 되었습니다")
+
+            firestore?.collection("sub_memo")?.document(sub_id!!)
+                ?.update("photoUrl", photo_uri)
+
+        }?.addOnFailureListener {
+            Log.d("확인", "사진 업로드에 실패했습니다")
         }
     }
 }

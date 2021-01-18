@@ -18,7 +18,44 @@
         android:layout_marginRight="10sp"
         android:padding="8sp"
         />
+    <RadioGroup
+        android:id="@+id/radio_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20sp"
+        android:layout_marginTop="20sp"
+        android:layout_marginRight="20sp"
+        android:orientation="horizontal"
+       >
+        <RadioButton
+            android:id="@+id/r_btn1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="할일" />
 
+        <RadioButton
+            android:id="@+id/r_btn2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="프로젝트" />
+
+        <RadioButton
+            android:id="@+id/r_btn3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="운동" />
+
+        <RadioButton
+            android:id="@+id/r_btn4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="약속" />
+
+    </RadioGroup>
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"

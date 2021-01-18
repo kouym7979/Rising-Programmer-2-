@@ -1,9 +1,12 @@
 package com.example.todolist
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -11,10 +14,16 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
+import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.example.todolist.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.jar.Manifest
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
 
@@ -24,6 +33,10 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     private lateinit var mAuth:FirebaseAuth
     private var activityMainBinding: ActivityMainBinding?= null
     private var filter:String ="전체"
+    var PICK_IMAGE_FROM_ALBUM=10
+    var photo_uri : Uri?=null
+    var storage : FirebaseStorage?=null
+    var firestore: FirebaseFirestore?=null
     //private var bottomNav =findViewById<BottomNavigationView>(R.id.bottomNav)
     var p_url:String ?=null
     var check_url:Int =0
@@ -41,7 +54,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
         Log.d("확인", "MainActivity - onCreate() called")
         binding.bottomNav.setOnNavigationItemSelectedListener(this)
-
+        //ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), 1)
         //초기화면 설정
         homeFragment = HomeFragment.newInstance()
         supportFragmentManager.beginTransaction().add(R.id.frame_layout, homeFragment).commit()
@@ -66,10 +79,14 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 ad.dismiss()
             }
 
-
             ad.show()
         }
+        btn_photo.setOnClickListener {
+            //if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                startActivity(Intent(this, AddPhoto::class.java))
+            //}
 
+        }
 
 
     }
@@ -83,6 +100,11 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         when (item.itemId) {
             R.id.menu_home -> {
                 Log.d("확인", "홈버튼 클릭")
+               // var intent :Intent?=null
+                //var sub_url:String=intent!!.getStringExtra("url")
+                //var bundle :Bundle?=null
+                //bundle?.putString("url",sub_url)
+                //homeFragment.arguments
                 homeFragment= HomeFragment.newInstance()
                 supportFragmentManager.beginTransaction().replace(R.id.frame_layout, homeFragment).commit()
 
@@ -92,41 +114,17 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 p_url=intent.getStringExtra("url")
                 check_url=intent.getIntExtra("check",0)
 
-                Log.d("확인", "리스트버튼 클릭 check_url넘버:"+check_url)
-
                 listFragment= ListFragment.newInstance()
-                var bundle : Bundle ?=null
-                bundle?.putString("filter",filter)
-                listFragment.arguments=bundle
                 supportFragmentManager.beginTransaction().replace(R.id.frame_layout, listFragment).commit()
 
             }
-            R.id.menu_mypage -> {
+            /*R.id.menu_mypage -> {
                 Log.d("확인", "마이페이지버튼 클릭")
                 mypageFragment= MypageFragment.newInstance()
                 supportFragmentManager.beginTransaction().replace(R.id.frame_layout, mypageFragment).commit()
-            }
+            }*/
         }
         return true
     }
 
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-
-        menuInflater.inflate(R.menu.list_menu,menu)
-
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId)
-        {
-            R.id.first->{ filter="할일" }
-            R.id.second->{ filter="프로젝트" }
-            R.id.third->{ filter ="운동"}
-            R.id.fourth->{ filter ="약속"}
-            R.id.five->{ filter ="전체"}
-        }
-        return super.onOptionsItemSelected(item)
-    }
 }
